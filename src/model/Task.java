@@ -8,10 +8,17 @@ public class Task {
     protected String description;
     protected Status status;
 
-    public Task(String name, String description) {
+    public Task(String name, Status status, String description) {
         this.name = name;
+        this.status = status;
         this.description = description;
-        this.status = Status.NEW;
+    }
+
+    public Task(int id, String name, Status status, String description) {
+        this.id = id;
+        this.name = name;
+        this.status = status;
+        this.description = description;
     }
 
     public int getId() {
@@ -42,17 +49,24 @@ public class Task {
         return status;
     }
 
-    public void updateStatus(Status status) {
-        this.status = status;
+    public void updateStatus(){
+        switch (status) {
+            case NEW:
+                status = Status.IN_PROGRESS;
+                break;
+            case IN_PROGRESS:
+                status = Status.DONE;
+                break;
+        }
     }
 
     @Override
     public String toString() {
         return "Task{" + // имя класса
                 "id='" + id + '\'' +
-                "name='" + name + '\'' +
+                ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
-                ", status'" + status + '\'' +
+                ", status='" + status + '\'' +
                 '}';
     }
 
@@ -61,22 +75,11 @@ public class Task {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Task task = (Task) o;
-        return Objects.equals(name, task.name) && Objects.equals(description, task.description) && status == task.status;
+        return id == task.id;
     }
 
     @Override
     public int hashCode() {
-        int hash = 17;
-
-        if (name != null) { // проверяем значение первого поля
-            hash += name.hashCode(); // вычисляем хеш первого поля
-        }
-
-        hash *= 31;
-
-        if (description != null) { // проверяем значение второго поля
-            hash += description.hashCode(); // вычисляем хеш второго поля и общий хеш
-        }
-        return hash;
+        return Objects.hash(id);
     }
 }
