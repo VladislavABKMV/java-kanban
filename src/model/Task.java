@@ -3,7 +3,7 @@ package model;
 import java.util.Objects;
 
 public class Task {
-    protected int id;
+    protected Integer id;
     protected String name;
     protected String description;
     protected Status status;
@@ -14,7 +14,7 @@ public class Task {
         this.description = description;
     }
 
-    public Task(int id, String name, Status status, String description) {
+    public Task(Integer id, String name, Status status, String description) {
         this.id = id;
         this.name = name;
         this.status = status;
@@ -25,7 +25,7 @@ public class Task {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -49,15 +49,8 @@ public class Task {
         return status;
     }
 
-    public void updateStatus(){
-        switch (status) {
-            case NEW:
-                status = Status.IN_PROGRESS;
-                break;
-            case IN_PROGRESS:
-                status = Status.DONE;
-                break;
-        }
+    public void setStatus(Status status) {
+        this.status = status;
     }
 
     @Override
