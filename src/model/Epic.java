@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class Epic extends Task {
 
-    private final ArrayList<Integer> subTaskIds;
+    private ArrayList<Integer> subTaskIds;
 
     public Epic(String name, Status status, String description) {
         super(name, status, description);
@@ -19,6 +19,11 @@ public class Epic extends Task {
     public ArrayList<Integer> getSubTaskIds() {
         return subTaskIds;
     }
+
+    public void setSubTaskIds(ArrayList<Integer> subTaskIds) {
+        this.subTaskIds = subTaskIds;
+    }
+
 
     public void addSubTask(SubTask subTask){
         if (!subTaskIds.contains(subTask.getId())) {
