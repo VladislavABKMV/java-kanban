@@ -47,6 +47,7 @@ public class TaskManager {
 
         for (Epic epic: epics.values()) {
             epic.setSubTaskIds(new ArrayList<>());
+            updateStatusEpic(epic);
         }
     }
 
