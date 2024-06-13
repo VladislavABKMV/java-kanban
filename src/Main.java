@@ -8,8 +8,7 @@ import service.Managers;
 public class Main {
 
     public static void main(String[] args) {
-        Managers managers = new Managers();
-        InMemoryTaskManager taskManager = managers.getDefault();
+        InMemoryTaskManager taskManager = Managers.getDefault();
 
         Task task1 = taskManager.createTask(new Task("Task1",  Status.NEW, "TaskDesc1"));
         Epic epic1 = taskManager.createEpic(new Epic("Epic1", Status.NEW,"EpicDesc1"));
