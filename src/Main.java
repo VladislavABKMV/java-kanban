@@ -25,6 +25,10 @@ public class Main {
 
 //        Check getTask
         System.out.println("Check getTask");
+        System.out.println("Get Epic: " + inMemoryTaskManager.getEpic(epic1.getId()).toString());
+        System.out.println("Get Task: " + inMemoryTaskManager.getTask(task1.getId()).toString());
+        System.out.println("Get Task: " + inMemoryTaskManager.getTask(task1.getId()).toString());
+        System.out.println("Get Task: " + inMemoryTaskManager.getTask(task1.getId()).toString());
         System.out.println("Get Task: " + inMemoryTaskManager.getTask(task1.getId()).toString());
         System.out.println("Get Epic: " + inMemoryTaskManager.getEpic(epic1.getId()).toString());
         System.out.println("Get SubTask 1: " + inMemoryTaskManager.getSubTask(subTaskFirstForEpic1.getId()).toString());
@@ -105,5 +109,7 @@ public class Main {
         System.out.println("Epics" + inMemoryTaskManager.getAllEpic());
         System.out.println("Subtasks" + inMemoryTaskManager.getAllSubTask());
         System.out.println("===========================================================");
+
+        System.out.println("History: " + inMemoryTaskManager.getHistory());
     }
 }
