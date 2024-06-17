@@ -45,5 +45,6 @@ public interface TaskManager {
     public void deleteSubTask(int id);
 
     public List<SubTask> getSubTasksForEpic(Epic epic);
+
     public List<Task> getHistory();
 }
