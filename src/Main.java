@@ -16,9 +16,9 @@ public class Main {
 
 
         Epic epic1 = taskManager.createEpic(new Epic("Epic1", Status.NEW,"EpicDesc1"));
-        SubTask subTaskFirstForEpic1 = taskManager.createSubTask(new SubTask("SubTask1", Status.NEW,
+        taskManager.createSubTask(new SubTask("SubTask1", Status.NEW,
                 "SubTaskDesk1", epic1.getId()));
-        SubTask subTaskSecondForEpic1 = taskManager.createSubTask(new SubTask("SubTask2", Status.NEW,
+        taskManager.createSubTask(new SubTask("SubTask2", Status.NEW,
                 "SubTaskDesk2", epic1.getId()));
 
         Epic epic2 = taskManager.createEpic(new Epic("Epic2", Status.NEW,"EpicDesc2"));
