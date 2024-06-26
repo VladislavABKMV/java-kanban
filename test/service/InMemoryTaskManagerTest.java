@@ -8,6 +8,10 @@ import model.Task;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import service.history.HistoryManager;
+import service.task.InMemoryTaskManager;
+import service.task.TaskManager;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.ArrayList;
