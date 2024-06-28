@@ -10,10 +10,12 @@ class SubTaskTest {
     @Test
     @DisplayName("Тест сравнение подзадачи со своей копией")
     public void equals_returnTrue_withFullCopy() {
+        //given
         SubTask subTask = new SubTask(1, "name", Status.NEW, "description", 0);
         SubTask copySubTask = new SubTask(subTask.getId(), "name", Status.NEW,
                 "description", 0);
 
+        //then
         assertSubTaskEquals(subTask, copySubTask);
     }
 

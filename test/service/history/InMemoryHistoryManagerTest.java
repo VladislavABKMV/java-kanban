@@ -16,13 +16,16 @@ class InMemoryHistoryManagerTest {
     @Test
     @DisplayName("Тест добавления и возврата истории")
     void addHistory_shouldReturnNotNull_andGetHistoryEquals_returnTrue_withFullCopy() {
+        //given
         HistoryManager historyManager = getHistory();
         ArrayList<Task> compareHistory = new ArrayList<>();
         Task task = getTask();
 
+        //when
         compareHistory.add(task);
         historyManager.addHistory(task);
 
+        //then
         assertNotNull(historyManager.getHistory(), "История не содержит элементов");
         assertArrayEquals(historyManager.getHistory().toArray(), compareHistory.toArray(),
                 "Ожидалось другое наполнение списка истории");
@@ -31,17 +34,20 @@ class InMemoryHistoryManagerTest {
     @Test
     @DisplayName("Тест переполнения списка историй")
     void addHistory_ListHasASizeOf10Elements_withOverFlow() {
+        //given
         HistoryManager historyManager = getHistory();
         Task task = getTask();
         Epic epic = getEpic();
         int maxSizeHistory = 10;
 
+        //when
         historyManager.addHistory(task);
         historyManager.addHistory(task);
         for (int i = 0 ; i < 10; i++) {
             historyManager.addHistory(epic);
         }
 
+        //then
         assertEquals(historyManager.getHistory().size(), maxSizeHistory, "Размер списка отличается от " +
                 "ожидаемого");
         assertEquals(historyManager.getHistory().getFirst(), epic, "Первый элемент списка отличается от " +

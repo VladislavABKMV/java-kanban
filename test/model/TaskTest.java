@@ -10,9 +10,11 @@ class TaskTest {
     @Test
     @DisplayName("Тест сравнение оригинала задачи со своей копией")
     public void equals_returnTrue_withFullCopy() {
+        //given
         Task task = new Task(1, "name", Status.NEW, "description");
         Task copyTask = new Task(task.getId(), "name", Status.NEW, "description");
 
+        //then
         assertTaskEquals(task, copyTask);
     }
 
