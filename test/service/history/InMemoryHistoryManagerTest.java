@@ -1,4 +1,4 @@
-package service;
+package service.history;
 
 import model.Task;
 import model.Status;
@@ -6,7 +6,6 @@ import model.Status;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import service.history.InMemoryHistoryManager;
 
 import java.util.ArrayList;
 

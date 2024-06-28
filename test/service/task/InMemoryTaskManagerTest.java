@@ -1,4 +1,4 @@
-package service;
+package service.task;
 
 import model.Epic;
 import model.Status;
@@ -9,8 +9,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import service.history.HistoryManager;
-import service.task.InMemoryTaskManager;
-import service.task.TaskManager;
 
 import static org.junit.jupiter.api.Assertions.*;
 
