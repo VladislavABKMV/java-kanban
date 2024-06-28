@@ -5,34 +5,21 @@ import model.Status;
 import model.SubTask;
 import model.Task;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import service.history.HistoryManager;
+import service.history.InMemoryHistoryManager;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.ArrayList;
-import java.util.List;
 
 @DisplayName("Тестирование класса InMemoryTaskManager")
 class InMemoryTaskManagerTest {
-    private Task task;
-    private Epic epic;
-
-    private TaskManager manager;
-
-    @BeforeEach
-    public void beforeEach() {
-        task = new Task("name Task", Status.NEW, "desc task");
-        epic = new Epic("name Epic", Status.NEW, "desc epic");
-
-        manager = new InMemoryTaskManager(new HistoryManagerForTest());
-    }
-
     @Test
     @DisplayName("Тест метода getAllTask")
-    void shouldGetAllTask() {
+    void getAllTask_equalsWithCompareList() {
+        TaskManager manager = getTaskManager();
+        Task task = getTask();
         Task compareTask = manager.createTask(task);
 
         ArrayList<Task> compareTasks = new ArrayList<>();
@@ -44,7 +31,9 @@ class InMemoryTaskManagerTest {
 
     @Test
     @DisplayName("Тест метода getAllEpic")
-    void shouldGetAllEpic() {
+    void getAllEpic_equalsWithCompareList() {
+        TaskManager manager = getTaskManager();
+        Epic epic = getEpic();
         Epic comapreEpic = manager.createEpic(epic);
 
         ArrayList<Epic> compareEpics = new ArrayList<>();
@@ -56,10 +45,11 @@ class InMemoryTaskManagerTest {
 
     @Test
     @DisplayName("Тест метода getAllSubTask")
-    void shouldGetAllSubTask() {
+    void getAllSubTask_equalsWithCompareList() {
+        TaskManager manager = getTaskManager();
+        Epic epic = getEpic();
         Epic cmpareEpic =  manager.createEpic(epic);
-        SubTask compareSubtask =  manager.createSubTask(new SubTask("name SubTask", Status.NEW,
-                "desc subTask", cmpareEpic.getId()));
+        SubTask compareSubtask =  manager.createSubTask(getSubTask(cmpareEpic.getId()));
 
         ArrayList<SubTask> compareSubTasks = new ArrayList<>();
         compareSubTasks.add(compareSubtask);
@@ -70,9 +60,11 @@ class InMemoryTaskManagerTest {
 
     @Test
     @DisplayName("Тест метода deleteAllTask")
-    void shouldDeleteAllTask() {
-        manager.createTask(task);
+    void deleteAllTask_shouldReturnTrue() {
+        TaskManager manager = getTaskManager();
+        Task task = getTask();
 
+        manager.createTask(task);
         manager.deleteAllTask();
 
         assertTrue(manager.getAllTask().isEmpty(), "НЕ все задачи удалены");
@@ -80,9 +72,11 @@ class InMemoryTaskManagerTest {
 
     @Test
     @DisplayName("Тест метода deleteAllEpic")
-    void shouldDeleteAllEpic() {
-        manager.createEpic(epic);
+    void deleteAllEpic_shouldReturnTrue() {
+        TaskManager manager = getTaskManager();
+        Epic epic = getEpic();
 
+        manager.createEpic(epic);
         manager.deleteAllEpic();
 
         assertTrue(manager.getAllEpic().isEmpty(), "НЕ все эпики удалены");
@@ -90,11 +84,12 @@ class InMemoryTaskManagerTest {
 
     @Test
     @DisplayName("Тест метода deleteAllSubTask")
-    void shouldDeleteAllSubTask() {
+    void deleteAllSubTask_shouldReturnTrue() {
+        TaskManager manager = getTaskManager();
+        Epic epic = getEpic();
         Epic testEpic = manager.createEpic(epic);
-        manager.createSubTask(new SubTask("name SubTask", Status.NEW,
-                "desc subTask", testEpic.getId()));
 
+        manager.createSubTask(getSubTask(testEpic.getId()));
         manager.deleteAllSubTask();
 
         assertTrue(manager.getAllSubTask().isEmpty(), "НЕ все подзадачи удалены");
@@ -102,60 +97,71 @@ class InMemoryTaskManagerTest {
 
     @Test
     @DisplayName("Тест метода getTask")
-    void shouldGetTask() {
-        Task comareTask = manager.createTask(task);
+    void getTask_equalsWithFullCopy() {
+        TaskManager manager = getTaskManager();
+
+        Task comareTask = manager.createTask(getTask());
 
         assertEquals(manager.getTask(comareTask.getId()), comareTask, "Задачи не совпадают");
     }
 
     @Test
     @DisplayName("Тест метода getEpic")
-    void shouldGetEpic() {
-        Epic compareEpic = manager.createEpic(epic);
+    void getEpic_equalsWithFullCopy() {
+        TaskManager manager = getTaskManager();
+
+        Epic compareEpic = manager.createEpic(getEpic());
 
         assertEquals(manager.getEpic(compareEpic.getId()), compareEpic, "Эпики не совпадают");
     }
 
     @Test
     @DisplayName("Тест метода getSubTask")
-    void shouldGetSubTask() {
-        Epic testEpic = manager.createEpic(epic);
-        SubTask comareSubTask = manager.createSubTask(new SubTask("name SubTask", Status.NEW,
-                "desc subTask", testEpic.getId()));
+    void getSubTask_equalsWithFullCopy() {
+        TaskManager manager = getTaskManager();
+        Epic testEpic = manager.createEpic(getEpic());
+
+        SubTask comareSubTask = manager.createSubTask(getSubTask(testEpic.getId()));
 
         assertEquals(manager.getSubTask(comareSubTask.getId()), comareSubTask, "Подзадачи не совпадают");
     }
 
     @Test
     @DisplayName("Тест метода createTask")
-    void shouldCreateTask() {
-        Task compareTask = manager.createTask(task);
+    void createTask_shouldMatchItsCopy() {
+        TaskManager manager = getTaskManager();
+
+        Task compareTask = manager.createTask(getTask());
 
         assertEquals(manager.getTask(compareTask.getId()), compareTask, "Задачи различаются");
     }
 
     @Test
     @DisplayName("Тест метода createEpic")
-    void shouldCreateEpic() {
-        Epic compareEpic = manager.createEpic(epic);
+    void createEpic_shouldMatchItsCopy() {
+        TaskManager manager = getTaskManager();
+
+        Epic compareEpic = manager.createEpic(getEpic());
 
         assertEquals(manager.getEpic(compareEpic.getId()), compareEpic, "Эпики различаются");
     }
 
     @Test
     @DisplayName("Тест метода createSubTask")
-    void shouldCreateSubTask() {
-        Epic testEpic = manager.createEpic(epic);
-        SubTask compareSubTask = manager.createSubTask(new SubTask("name SubTask", Status.NEW,
-                "desc subTask", testEpic.getId()));
+    void createSubTask_shouldMatchItsCopy() {
+        TaskManager manager = getTaskManager();
+        Epic testEpic = manager.createEpic(getEpic());
+
+        SubTask compareSubTask = manager.createSubTask(getSubTask(testEpic.getId()));
 
         assertEquals(manager.getSubTask(compareSubTask.getId()), compareSubTask, "Подзадачи различаются");
     }
 
     @Test
     @DisplayName("Тест метода updateTask")
-    void shouldUpdateTask() {
-        Task oldTask = manager.createTask(task);
+    void updateTask_shouldTheOriginalChange() {
+        TaskManager manager = getTaskManager();
+        Task oldTask = manager.createTask(getTask());
         Task compareTask = new Task(oldTask.getId(),"new task name", Status.DONE, "new desc task");
 
         manager.updateTask(compareTask);
@@ -165,31 +171,35 @@ class InMemoryTaskManagerTest {
 
     @Test
     @DisplayName("Тест метода updateEpic")
-    void shouldUpdateEpic() {
-        Epic oldEpic = manager.createEpic(epic);
+    void updateEpic_shouldTheOriginalChange() {
+        TaskManager manager = getTaskManager();
+        Epic oldEpic = manager.createEpic(getEpic());
         Epic compareEpic = new Epic(oldEpic.getId(),"new epic name", Status.DONE, "new desc epic");
 
         manager.updateEpic(compareEpic);
+
         assertEquals(manager.getEpic(oldEpic.getId()), compareEpic, "Эпик не был обновлен");
     }
 
     @Test
     @DisplayName("Тест метода updateSubTask")
-    void shouldUpdateSubTask() {
-        Epic testEpic = manager.createEpic(epic);
-        SubTask oldSubTask = manager.createSubTask(new SubTask("name SubTask", Status.NEW,
-                "desc subTask", testEpic.getId()));
+    void updateSubTask_shouldTheOriginalChange() {
+        TaskManager manager = getTaskManager();
+        Epic testEpic = manager.createEpic(getEpic());
+        SubTask oldSubTask = manager.createSubTask(getSubTask(testEpic.getId()));
         SubTask compareSubTask = new SubTask(oldSubTask.getId(),"new SubTask name", Status.DONE,
                 "new desc subTask", testEpic.getId());
 
         manager.updateSubTask(compareSubTask);
+
         assertEquals(manager.getSubTask(oldSubTask.getId()), compareSubTask, "Подзадача не была обновлена");
     }
 
     @Test
     @DisplayName("Тест метода deleteTask")
-    void shouldDeleteTask() {
-        Task testTask = manager.createTask(task);
+    void deleteTask_shouldReturnTrue() {
+        TaskManager manager = getTaskManager();
+        Task testTask = manager.createTask(getTask());
 
         manager.deleteTask(testTask.getId());
 
@@ -198,8 +208,9 @@ class InMemoryTaskManagerTest {
 
     @Test
     @DisplayName("Тест метода deleteEpic")
-    void shouldDeleteEpic() {
-        Epic testEpic = manager.createEpic(epic);
+    void deleteEpic_shouldReturnTrue() {
+        TaskManager manager = getTaskManager();
+        Epic testEpic = manager.createEpic(getEpic());
 
         manager.deleteEpic(testEpic.getId());
 
@@ -208,10 +219,10 @@ class InMemoryTaskManagerTest {
 
     @Test
     @DisplayName("Тест метода deleteSubTask")
-    void shouldDeleteSubTask() {
-        Epic testEpic = manager.createEpic(epic);
-        SubTask testSubTask = manager.createSubTask(new SubTask("name SubTask", Status.NEW,
-                "desc subTask", testEpic.getId()));
+    void deleteSubTask_shouldReturnTrue() {
+        TaskManager manager = getTaskManager();
+        Epic testEpic = manager.createEpic(getEpic());
+        SubTask testSubTask = manager.createSubTask(getSubTask(testEpic.getId()));
 
         manager.deleteSubTask(testSubTask.getId());
 
@@ -220,12 +231,12 @@ class InMemoryTaskManagerTest {
 
     @Test
     @DisplayName("Тест метода getSubTasksForEpic")
-    void shouldGetSubTasksForEpic() {
-        Epic testEpic = manager.createEpic(epic);
-        SubTask testSubTask = manager.createSubTask(new SubTask("name SubTask", Status.NEW,
-                "desc subTask", testEpic.getId()));
-
+    void getSubTasksForEpic_shouldMatchWithCompareList() {
+        TaskManager manager = getTaskManager();
+        Epic testEpic = manager.createEpic(getEpic());
+        SubTask testSubTask = manager.createSubTask(getSubTask(testEpic.getId()));
         ArrayList<SubTask> compareSubTaskForEpic = new ArrayList<>();
+
         compareSubTaskForEpic.add(testSubTask);
 
         assertArrayEquals(manager.getSubTasksForEpic(testEpic).toArray(), compareSubTaskForEpic.toArray(),
@@ -234,17 +245,16 @@ class InMemoryTaskManagerTest {
 
     @Test
     @DisplayName("Тест метода getHistory")
-    void shouldGetHistory() {
-        Task testTask = manager.createTask(task);
-        Epic testEpic = manager.createEpic(epic);
-        SubTask testSubTask = manager.createSubTask(new SubTask("name SubTask", Status.NEW,
-                "desc subTask", testEpic.getId()));
+    void getHistory_shouldReturnHistoryList() {
+        TaskManager manager = getTaskManager();
+        Task testTask = manager.createTask(getTask());
+        Epic testEpic = manager.createEpic(getEpic());
+        SubTask testSubTask = manager.createSubTask(getSubTask(testEpic.getId()));
         ArrayList<Task> compareHistory = new ArrayList<>();
 
         compareHistory.add(testTask);
         compareHistory.add(testEpic);
         compareHistory.add(testSubTask);
-
         manager.getTask(testTask.getId());
         manager.getEpic(testEpic.getId());
         manager.getSubTask(testSubTask.getId());
@@ -253,17 +263,19 @@ class InMemoryTaskManagerTest {
                 "ожидаемым значением");
     }
 
-    private static class HistoryManagerForTest implements HistoryManager {
-        List<Task> historyForTest = new ArrayList<>();
+    private static Task getTask() {
+        return new Task("name Task", Status.NEW, "desc task");
+    }
 
-        @Override
-        public void addHistory(Task task) {
-            historyForTest.add(task);
-        }
+    private static Epic getEpic() {
+        return new Epic("name Epic", Status.NEW, "desc epic");
+    }
 
-        @Override
-        public List<Task> getHistory(){
-            return historyForTest;
-        }
+    private static SubTask getSubTask(int epicId) {
+        return new SubTask("name SubTask", Status.NEW, "desc subTask", epicId);
+    }
+
+    private static TaskManager getTaskManager() {
+        return new InMemoryTaskManager(new InMemoryHistoryManager());
     }
 }
