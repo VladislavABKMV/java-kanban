@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class SubTaskTest {
     @Test
     @DisplayName("Тест сравнение подзадачи со своей копией")
-    public void shouldEqualsWithCopy() {
+    public void equals_returnTrue_withFullCopy() {
         SubTask subTask = new SubTask(1, "name", Status.NEW, "description", 0);
         SubTask copySubTask = new SubTask(subTask.getId(), "name", Status.NEW,
                 "description", 0);
