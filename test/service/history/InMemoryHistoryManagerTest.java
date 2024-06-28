@@ -30,7 +30,7 @@ class InMemoryHistoryManagerTest {
 
     @Test
     @DisplayName("Тест переполнения списка историй")
-    void addHistory_ListHasASizeOf10Elements_whenOverFlow() {
+    void addHistory_ListHasASizeOf10Elements_withOverFlow() {
         HistoryManager historyManager = getHistory();
         Task task = getTask();
         Epic epic = getEpic();
