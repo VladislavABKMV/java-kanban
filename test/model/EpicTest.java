@@ -1,6 +1,5 @@
 package model;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -8,42 +7,47 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @DisplayName("Тестирование класса Epic")
 class EpicTest {
-    private Epic epic;
-
-    @BeforeEach
-    void beforeEach() {
-        epic = new Epic(0, "name", Status.NEW, "description");
-    }
 
     @Test
     @DisplayName("Тест на совпадение двух эпиков")
-    public void shouldEqualsWithCopy() {
-        Epic compareEpic = new Epic(epic.getId(), "name", epic.getStatus(), "description");
+    public void equals_returnTrue_withFullCopy() {
+        Epic epic = getEpic();
+        Epic compareEpic = new Epic(epic.getId(), epic.getName(), epic.getStatus(), epic.getDescription());
         
         assertEpicEquals(epic, compareEpic);
     }
 
+    /*
+    /  Дело в том, что в моей реализации Эпик знал о существовании подзадач,
+    /  ибо при добавлении/удалении подзадачи его методы принимали подзадачу,
+    /  после извлекали id, и уже после добавляли/удаляли id из списка
+    /
+    /  А наследника класса подзадач я сделал потому,
+    /  что наставник порекомендовал максимально избегать в тестах одного класса использование других классов
+    */
     @Test
     @DisplayName("Тест добавления подзадач в эпик, с проверкой на дубликаты")
-    public void shouldAddSubTask() {
-        SubTaskForTest subTask = new SubTaskForTest(1, "name", Status.NEW, "description", epic.getId());
+    public void addSubTask_notAddDuplicates() {
+        Epic epic = getEpic();
+        int subTaskId = 5;
         int expectedSizeList = 1;
 
-        epic.addSubTask(subTask);
-        epic.addSubTask(subTask);
+        epic.addSubTask(subTaskId);
+        epic.addSubTask(subTaskId);
 
-        assertEquals(epic.getSubTaskIds().size(), expectedSizeList, "Количество подзадач в Эпике отличается от " +
-                "ожидаемого");
+        assertEquals(epic.getSubTaskIds().size(), expectedSizeList, "Количество подзадач в Эпике " +
+                "отличается от ожидаемого");
     }
 
     @Test
     @DisplayName("Тест удаления подзадач из эпика")
-    public void shouldRemoveSubtask() {
-        SubTaskForTest subTask = new SubTaskForTest(1, "name", Status.NEW, "description", epic.getId());
+    public void removeSubTask_shouldReturnTrue() {
+        Epic epic = getEpic();
+        int subTaskId = 5;
 
-        epic.addSubTask(subTask);
-        epic.addSubTask(subTask);
-        epic.removeSubTask(subTask);
+        epic.addSubTask(subTaskId);
+        epic.addSubTask(subTaskId);
+        epic.removeSubTask(subTaskId);
 
         assertTrue(epic.getSubTaskIds().isEmpty(), "Ожидается отсутствие подзадач");
     }
@@ -55,9 +59,7 @@ class EpicTest {
         assertEquals(epic.getDescription(), copyEpic.getDescription(), "description " + "должны совпадать.");
     }
 
-    private static class SubTaskForTest extends SubTask {
-        public SubTaskForTest(int id, String name, Status status, String description, Integer epicId) {
-            super(id, name, status, description, epicId);
-        }
+    private  static Epic getEpic() {
+        return new Epic(0, "name", Status.NEW, "description");
     }
 }
