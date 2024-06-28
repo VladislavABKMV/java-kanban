@@ -1,9 +1,9 @@
 package service.history;
 
+import model.Epic;
 import model.Task;
 import model.Status;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -13,22 +13,12 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @DisplayName("Тестирование класса InMemoryHistoryManager")
 class InMemoryHistoryManagerTest {
-    private TaskForTests task;
-    private EpicForTests epic;
-
-    InMemoryHistoryManager historyManager;
-
-    @BeforeEach
-    void beforeEach(){
-        task = new TaskForTests(0, "Name", Status.NEW, "Description");
-        epic = new EpicForTests(1, "Name", Status.NEW,"Description");
-        historyManager = new InMemoryHistoryManager();
-    }
-
     @Test
     @DisplayName("Тест добавления и возврата истории")
-    void shouldAddHistoryAndGetHistory() {
+    void addHistory_shouldReturnNotNull_andGetHistoryEquals_returnTrue_withFullCopy() {
+        HistoryManager historyManager = getHistory();
         ArrayList<Task> compareHistory = new ArrayList<>();
+        Task task = getTask();
 
         compareHistory.add(task);
         historyManager.addHistory(task);
@@ -40,11 +30,14 @@ class InMemoryHistoryManagerTest {
 
     @Test
     @DisplayName("Тест переполнения списка историй")
-    void shouldAddHistoryOver10Elements() {
+    void addHistory_ListHasASizeOf10Elements_whenOverFlow() {
+        HistoryManager historyManager = getHistory();
+        Task task = getTask();
+        Epic epic = getEpic();
         int maxSizeHistory = 10;
-        historyManager.addHistory(task);
-        historyManager.addHistory(task);
 
+        historyManager.addHistory(task);
+        historyManager.addHistory(task);
         for (int i = 0 ; i < 10; i++) {
             historyManager.addHistory(epic);
         }
@@ -55,15 +48,15 @@ class InMemoryHistoryManagerTest {
                 "ожидаемого");
     }
 
-    private static class TaskForTests extends Task{
-        public TaskForTests(Integer id, String name, Status status, String description) {
-            super(id, name, status, description);
-        }
+    private static Task getTask() {
+        return new Task(0, "Name", Status.NEW, "Description");
     }
 
-    private static class EpicForTests extends Task {
-        public EpicForTests(Integer id, String name, Status status, String description) {
-            super(id, name, status, description);
-        }
+    private static Epic getEpic() {
+        return new Epic(1, "Name", Status.NEW,"Description");
+    }
+
+    private static HistoryManager getHistory() {
+        return new InMemoryHistoryManager();
     }
 }
