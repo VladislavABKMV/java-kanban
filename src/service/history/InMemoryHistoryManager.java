@@ -4,7 +4,7 @@ import model.Task;
 
 import java.util.*;
 
-public class InMemoryHistoryManager implements HistoryManager{
+public class InMemoryHistoryManager implements HistoryManager {
     private static class Node {
         Node prev;
         Task element;
@@ -79,7 +79,7 @@ public class InMemoryHistoryManager implements HistoryManager{
     }
 
     private void removeNode(Node node) {
-        if(node != null) {
+        if (node != null) {
             linkedNext(node);
             linkedPrev(node);
             history.remove(node.element.getId());
