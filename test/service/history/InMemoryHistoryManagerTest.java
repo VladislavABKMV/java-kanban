@@ -1,6 +1,7 @@
 package service.history;
 
 import model.Epic;
+import model.SubTask;
 import model.Task;
 import model.Status;
 
@@ -32,26 +33,88 @@ class InMemoryHistoryManagerTest {
     }
 
     @Test
-    @DisplayName("Тест переполнения списка историй")
-    void addHistory_ListHasASizeOf10Elements_withOverFlow() {
+    @DisplayName("Тест на отсутствие повторов в истории")
+    void addHistory_shouldNotRepeatElements() {
         //given
         HistoryManager historyManager = getHistory();
+        ArrayList<Task> compareHistory = new ArrayList<>();
         Task task = getTask();
-        Epic epic = getEpic();
-        int maxSizeHistory = 10;
 
         //when
+        compareHistory.add(task);
         historyManager.addHistory(task);
         historyManager.addHistory(task);
-        for (int i = 0 ; i < 10; i++) {
-            historyManager.addHistory(epic);
-        }
 
         //then
-        assertEquals(historyManager.getHistory().size(), maxSizeHistory, "Размер списка отличается от " +
-                "ожидаемого");
-        assertEquals(historyManager.getHistory().getFirst(), epic, "Первый элемент списка отличается от " +
-                "ожидаемого");
+        assertArrayEquals(historyManager.getHistory().toArray(), compareHistory.toArray(),
+                "Ожидалось другое наполнение списка истории");
+    }
+
+    @Test
+    @DisplayName("Тест удаления истории из начала")
+    void removeHistory_firstElementShouldRemove() {
+        //given
+        HistoryManager historyManager = getHistory();
+        ArrayList<Task> compareHistory = new ArrayList<>();
+        Task task = getTask();
+        Epic epic = getEpic();
+        SubTask subTask = getSubTask();
+
+        //when
+        compareHistory.add(epic);
+        compareHistory.add(subTask);
+        historyManager.addHistory(task);
+        historyManager.addHistory(epic);
+        historyManager.addHistory(subTask);
+        historyManager.removeHistory(task.getId());
+
+        //then
+        assertArrayEquals(historyManager.getHistory().toArray(), compareHistory.toArray(),
+                "Ожидалось другое наполнение списка истории.");
+    }
+
+    @Test
+    @DisplayName("Тест удаления истории из середины")
+    void removeHistory_middleElementShouldRemove() {
+        HistoryManager historyManager = getHistory();
+        ArrayList<Task> compareHistory = new ArrayList<>();
+        Task task = getTask();
+        Epic epic = getEpic();
+        SubTask subTask = getSubTask();
+
+        //when
+        compareHistory.add(task);
+        compareHistory.add(subTask);
+        historyManager.addHistory(task);
+        historyManager.addHistory(epic);
+        historyManager.addHistory(subTask);
+        historyManager.removeHistory(epic.getId());
+
+        //then
+        assertArrayEquals(historyManager.getHistory().toArray(), compareHistory.toArray(),
+                "Ожидалось другое наполнение списка истории");
+    }
+
+    @Test
+    @DisplayName("Тест удаления истории с конца")
+    void removeHistory_lastElementShouldRemove() {
+        HistoryManager historyManager = getHistory();
+        ArrayList<Task> compareHistory = new ArrayList<>();
+        Task task = getTask();
+        Epic epic = getEpic();
+        SubTask subTask = getSubTask();
+
+        //when
+        compareHistory.add(task);
+        compareHistory.add(epic);
+        historyManager.addHistory(task);
+        historyManager.addHistory(epic);
+        historyManager.addHistory(subTask);
+        historyManager.removeHistory(subTask.getId());
+
+        //then
+        assertArrayEquals(historyManager.getHistory().toArray(), compareHistory.toArray(),
+                "Ожидалось другое наполнение списка истории");
     }
 
     private static Task getTask() {
@@ -60,6 +123,10 @@ class InMemoryHistoryManagerTest {
 
     private static Epic getEpic() {
         return new Epic(1, "Name", Status.NEW,"Description");
+    }
+
+    private static SubTask getSubTask() {
+        return new SubTask(2,"name", Status.NEW,"description", 1);
     }
 
     private static HistoryManager getHistory() {
