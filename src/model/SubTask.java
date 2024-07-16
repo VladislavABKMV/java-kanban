@@ -1,6 +1,6 @@
 package model;
 
-public class SubTask extends Task{
+public class SubTask extends Task {
     private final Integer epicId;
 
     public SubTask(String name, Status status, String description, Integer epicId) {
