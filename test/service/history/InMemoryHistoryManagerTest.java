@@ -5,6 +5,7 @@ import model.SubTask;
 import model.Task;
 import model.Status;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -14,11 +15,18 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @DisplayName("Тестирование класса InMemoryHistoryManager")
 class InMemoryHistoryManagerTest {
+
+    private static HistoryManager historyManager;
+
+    @BeforeEach
+    void beforeEach() {
+        historyManager = getHistory();
+    }
+
     @Test
     @DisplayName("Тест добавления и возврата истории")
     void addHistory_shouldReturnNotNull_andGetHistoryEquals_returnTrue_withFullCopy() {
         //given
-        HistoryManager historyManager = getHistory();
         ArrayList<Task> compareHistory = new ArrayList<>();
         Task task = getTask();
 
@@ -36,7 +44,6 @@ class InMemoryHistoryManagerTest {
     @DisplayName("Тест на отсутствие повторов в истории")
     void addHistory_shouldNotRepeatElements() {
         //given
-        HistoryManager historyManager = getHistory();
         ArrayList<Task> compareHistory = new ArrayList<>();
         Task task = getTask();
 
@@ -54,7 +61,6 @@ class InMemoryHistoryManagerTest {
     @DisplayName("Тест удаления истории из начала")
     void removeHistory_firstElementShouldRemove() {
         //given
-        HistoryManager historyManager = getHistory();
         ArrayList<Task> compareHistory = new ArrayList<>();
         Task task = getTask();
         Epic epic = getEpic();
@@ -76,7 +82,6 @@ class InMemoryHistoryManagerTest {
     @Test
     @DisplayName("Тест удаления истории из середины")
     void removeHistory_middleElementShouldRemove() {
-        HistoryManager historyManager = getHistory();
         ArrayList<Task> compareHistory = new ArrayList<>();
         Task task = getTask();
         Epic epic = getEpic();
@@ -98,7 +103,6 @@ class InMemoryHistoryManagerTest {
     @Test
     @DisplayName("Тест удаления истории с конца")
     void removeHistory_lastElementShouldRemove() {
-        HistoryManager historyManager = getHistory();
         ArrayList<Task> compareHistory = new ArrayList<>();
         Task task = getTask();
         Epic epic = getEpic();
