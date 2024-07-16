@@ -20,7 +20,7 @@ public class InMemoryHistoryManager implements HistoryManager {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
             Node node = (Node) o;
-            return Objects.equals(prev, node.prev) && Objects.equals(element, node.element) && Objects.equals(next, node.next);
+            return Objects.equals(element, node.element);
         }
 
         @Override
