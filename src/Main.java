@@ -2,12 +2,16 @@ import model.Status;
 import model.SubTask;
 import model.Task;
 import model.Epic;
+import service.task.FileBackedTaskManager;
 import service.task.TaskManager;
 import service.Managers;
+
+import java.io.File;
 
 public class Main {
 
     public static void main(String[] args) {
+
         TaskManager taskManager = Managers.getDefault();
 
         taskManager.createTask(new Task("Task1",  Status.NEW, "TaskDesc1"));
@@ -29,8 +33,11 @@ public class Main {
         taskManager.createSubTask(new SubTask("SubTask3", Status.DONE, "SubTaskDesk3", epic3.getId()));
         taskManager.createSubTask(new SubTask("SubTask3", Status.DONE, "SubTaskDesk3", epic3.getId()));
 
+        TaskManager comparetaskManager = FileBackedTaskManager.loadFromFile(new File("resources/Task.csv"));
+        System.out.println("taskManager");
         printAllTasks(taskManager);
-
+        System.out.println("compareTaskManager");
+        printAllTasks(comparetaskManager);
     }
 
     private static void printAllTasks(TaskManager manager) {
