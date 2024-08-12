@@ -28,7 +28,7 @@ class FileBackedTaskManagerTest {
         SubTask subTask = getSubTask(epic.getId());
 
         //  when
-        manager.createTask(getTask());
+        manager.createTask(task);
         manager.createEpic(epic);
         manager.createSubTask(subTask);
         compareManager = FileBackedTaskManager.loadFromFile(file);
