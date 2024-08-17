@@ -4,7 +4,7 @@ import model.*;
 
 public class TaskConverter {
 
-    public final String header = "id,type,name,status,description,epicId";
+    public static final String header = "id,type,name,status,description,epicId";
 
     public static String toString(Task task) {
         return task.getId() + "," + task.getType() + "," + task.getName() + "," + task.getStatus() + ","
