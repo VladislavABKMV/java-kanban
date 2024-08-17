@@ -1,13 +1,1 @@
-id,type,name,status,description,epic
-0,TASK,Task1,NEW,TaskDesc1,null
-1,TASK,Task2,NEW,TaskDesc2,null
-2,TASK,Task3,NEW,TaskDesc3,null
-3,EPIC,Epic1,NEW,EpicDesc1,null
-6,EPIC,Epic2,IN_PROGRESS,EpicDesc2,null
-9,EPIC,Epic3,DONE,EpicDesc3,null
-4,SUB_TASK,SubTask1,NEW,SubTaskDesk1,3
-5,SUB_TASK,SubTask2,NEW,SubTaskDesk2,3
-7,SUB_TASK,SubTask2,NEW,SubTaskDesk2,6
-8,SUB_TASK,SubTask2,DONE,SubTaskDesk2,6
-10,SUB_TASK,SubTask3,DONE,SubTaskDesk3,9
-11,SUB_TASK,SubTask3,DONE,SubTaskDesk3,9
+
