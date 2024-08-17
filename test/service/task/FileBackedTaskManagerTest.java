@@ -18,20 +18,19 @@ import static org.junit.jupiter.api.Assertions.*;
 class FileBackedTaskManagerTest {
     @Test
     @DisplayName("Тест сохранения и загрузки состояния менеджера задач")
-    void originalTaskManagerAndLoadingTaskManager_shouldNotDiffer() throws IOException {
+    void loadFromFile_loadState() throws IOException {
         //  given
         File file = getFile();
         TaskManager manager = getTaskManager(file);
-        TaskManager compareManager;
         Task task = getTask();
         Epic epic = getEpic();
         SubTask subTask = getSubTask(epic.getId());
-
-        //  when
         manager.createTask(task);
         manager.createEpic(epic);
         manager.createSubTask(subTask);
-        compareManager = FileBackedTaskManager.loadFromFile(file);
+
+        //  when
+        TaskManager compareManager = FileBackedTaskManager.loadFromFile(new InMemoryHistoryManager() ,file);
 
         //  then
         assertTaskManagerEquals(manager, compareManager);
@@ -59,7 +58,7 @@ class FileBackedTaskManagerTest {
     }
 
     private static TaskManager getTaskManager(File file) {
-        return new FileBackedTaskManager(new InMemoryHistoryManager(), file);
+        return FileBackedTaskManager.loadFromFile(new InMemoryHistoryManager(), file);
     }
 
     private static File getFile() throws IOException {
