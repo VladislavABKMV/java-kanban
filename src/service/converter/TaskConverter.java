@@ -2,15 +2,27 @@ package service.converter;
 
 import model.*;
 
-public class TaskConverter implements Converter {
-    @Override
-    public String toString(Task task) {
-        return String.format("%d,%s,%s,%s,%s,%d", task.getId(), task.getType(), task.getName(), task.getStatus(),
-                task.getDescription(), task.getEpicId());
+public class TaskConverter {
+
+    public final static String HEADER = "id,type,name,status,description,epicId";
+
+    public static String toString(Task task) {
+        return task.getId() + "," + task.getType() + "," + task.getName() + "," + task.getStatus() + ","
+                + task.getDescription() + "," + "null";
     }
 
-    @Override
-    public Task fromString(String string) {
+    public static String toString(Epic task) {
+        return task.getId() + "," + task.getType() + "," + task.getName() + "," + task.getStatus() + ","
+                + task.getDescription() + "," + "null";
+    }
+
+    public static String toString(SubTask task) {
+        return task.getId() + "," + task.getType() + "," + task.getName() + "," + task.getStatus() + ","
+                + task.getDescription() + "," + task.getEpicId();
+    }
+
+
+    public static Task fromString(String string) {
         final String[] taskInfo = string.split(",");
         TaskType type = TaskType.valueOf(taskInfo[1]);
 
