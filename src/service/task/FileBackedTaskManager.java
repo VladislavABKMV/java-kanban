@@ -4,32 +4,23 @@ import exception.ManagerSaveException;
 import model.Epic;
 import model.SubTask;
 import model.Task;
-import service.converter.Converter;
 import service.converter.TaskConverter;
 import service.history.HistoryManager;
-import service.history.InMemoryHistoryManager;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 
-public class FileBackedTaskManager extends InMemoryTaskManager implements TaskManager {
-    private final Converter converter;
+public class FileBackedTaskManager extends InMemoryTaskManager{
+
     private final File file;
 
-    public FileBackedTaskManager(HistoryManager historyManager, File file) {
+    private FileBackedTaskManager(HistoryManager historyManager, File file) {
         super(historyManager);
         this.file = file;
-        converter = new TaskConverter();
     }
 
-    public FileBackedTaskManager(File file) {
-        super(new InMemoryHistoryManager());
-        this.file = file;
-        converter = new TaskConverter();
-    }
-
-    public static FileBackedTaskManager loadFromFile(File file) {
-        FileBackedTaskManager manager = new FileBackedTaskManager(file);
+    public static FileBackedTaskManager loadFromFile(HistoryManager historyManager, File file) {
+        FileBackedTaskManager manager = new FileBackedTaskManager(historyManager, file);
         manager.load();
         return manager;
     }
@@ -37,112 +28,62 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
     @Override
     public void deleteAllTask() {
         super.deleteAllTask();
-
-        try {
-            save();
-        } catch (ManagerSaveException e) {
-            throw new RuntimeException(e);
-        }
+        save();
     }
 
     @Override
     public void updateTask(Task task) {
         super.updateTask(task);
-
-        try {
-            save();
-        } catch (ManagerSaveException e) {
-            throw new RuntimeException(e);
-        }
+        save();
     }
 
     @Override
     public void updateEpic(Epic updateEpic) {
         super.updateEpic(updateEpic);
-
-        try {
-            save();
-        } catch (ManagerSaveException e) {
-            throw new RuntimeException(e);
-        }
+        save();
     }
 
     @Override
     public void updateSubTask(SubTask subTask) {
         super.updateSubTask(subTask);
-
-        try {
-            save();
-        } catch (ManagerSaveException e) {
-            throw new RuntimeException(e);
-        }
+        save();
     }
 
     @Override
     public void deleteTask(int id) {
         super.deleteTask(id);
-
-        try {
-            save();
-        } catch (ManagerSaveException e) {
-            throw new RuntimeException(e);
-        }
+        save();
     }
 
     @Override
     public void deleteEpic(int id) {
         super.deleteEpic(id);
-
-        try {
-            save();
-        } catch (ManagerSaveException e) {
-            throw new RuntimeException(e);
-        }
+        save();
     }
 
     @Override
     public void deleteSubTask(int id) {
         super.deleteSubTask(id);
-
-        try {
-            save();
-        } catch (ManagerSaveException e) {
-            throw new RuntimeException(e);
-        }
+        save();
     }
 
     @Override
     public void deleteAllEpic() {
         super.deleteAllEpic();
-
-        try {
-            save();
-        } catch (ManagerSaveException e) {
-            throw new RuntimeException(e);
-        }
+        save();
     }
 
     @Override
     public void deleteAllSubTask() {
         super.deleteAllSubTask();
-
-        try {
-            save();
-        } catch (ManagerSaveException e) {
-            throw new RuntimeException(e);
-        }
+        save();
     }
 
     @Override
     public Task createTask(Task task) {
         task = super.createTask(task);
 
-        try {
-            save();
-        } catch (ManagerSaveException e) {
-            throw new RuntimeException(e);
-        }
-
+        save();
         return task;
     }
 
@@ -150,12 +91,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
     public Epic createEpic(Epic epic) {
         epic = super.createEpic(epic);
 
-        try {
-            save();
-        } catch (ManagerSaveException e) {
-            throw new RuntimeException(e);
-        }
-
+        save();
         return epic;
     }
 
@@ -163,41 +99,38 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
     public SubTask createSubTask(SubTask subTask) {
         subTask = super.createSubTask(subTask);
 
-        try {
-            save();
-        } catch (ManagerSaveException e) {
-            throw new RuntimeException(e);
-        }
-
+        save();
         return subTask;
     }
 
-    private void save() throws ManagerSaveException {
+    private void save() {
         try (final BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
-            writer.append("id,type,name,status,description,epic");
+            writer.append(TaskConverter.HEADER);
             writer.newLine();
 
             for (Task task : tasks.values()) {
-                writeTask(writer, task);
+                String line = TaskConverter.toString(task);
+
+                writer.append(line);
+                writer.newLine();
             }
 
             for (Epic epic : epics.values()) {
-                writeTask(writer, epic);
+                String line = TaskConverter.toString(epic);
+
+                writer.append(line);
+                writer.newLine();
             }
 
             for (SubTask subTask : subTasks.values()) {
-                writeTask(writer, subTask);
+                String line = TaskConverter.toString(subTask);
+
+                writer.append(line);
+                writer.newLine();
             }
         } catch (IOException e) {
             throw new ManagerSaveException(String.format("Ошибка в файле: %s", file.getAbsolutePath()));
         }
-    }
-
-    private void writeTask(BufferedWriter writer, Task task) throws IOException {
-        String line = converter.toString(task);
-
-        writer.append(line);
-        writer.newLine();
     }
 
     private void load() {
@@ -205,8 +138,9 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
 
         try (final BufferedReader reader = new BufferedReader(new FileReader(file, StandardCharsets.UTF_8))) {
             reader.readLine();
+
             while (true) {
-                String line = reader.readLine();
+               String line = reader.readLine();
 
                 if (line == null) {
                     break;
@@ -219,24 +153,24 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
             throw new RuntimeException(e);
         }
 
-        linkedSubTask();
+
+        linkSubTask();
         idCount = maxId;
     }
 
     private Task putTask(String line) {
-        final Task task = converter.fromString(line);
+        final Task task = TaskConverter.fromString(line);
 
         switch (task.getType()) {
             case TASK -> tasks.put(task.getId(), task);
             case EPIC -> epics.put(task.getId(), (Epic) task);
             case SUB_TASK -> subTasks.put(task.getId(), (SubTask) task);
-            // default trow
         }
 
         return task;
     }
 
-    private void linkedSubTask() {
+    private void linkSubTask() {
         for (SubTask subTask : subTasks.values()) {
             Epic epic = epics.get(subTask.getEpicId());
             epic.addSubTask(subTask.getId());
