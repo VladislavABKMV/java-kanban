@@ -1,7 +1,7 @@
 package model;
 
 public class SubTask extends Task {
-    private final Integer epicId;
+    private final int epicId;
 
     public SubTask(String name, Status status, String description, Integer epicId) {
         super(name, status, description);
@@ -13,8 +13,8 @@ public class SubTask extends Task {
         this.epicId = epicId;
     }
 
-    @Override
-    public Integer getEpicId() {
+
+    public int getEpicId() {
         return epicId;
     }
 
