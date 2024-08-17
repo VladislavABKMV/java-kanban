@@ -9,7 +9,7 @@ import java.io.File;
 
 public class Managers {
     public static TaskManager getDefault() {
-        return new FileBackedTaskManager(getDefaultHistory(), new File("resources/Task.csv"));
+        return FileBackedTaskManager.loadFromFile(getDefaultHistory(), new File("resources/Task.csv"));
     }
 
     public static HistoryManager getDefaultHistory() {
