@@ -5,9 +5,11 @@ import model.Epic;
 import service.task.TaskManager;
 import service.Managers;
 
+
 public class Main {
 
     public static void main(String[] args) {
+
         TaskManager taskManager = Managers.getDefault();
 
         taskManager.createTask(new Task("Task1",  Status.NEW, "TaskDesc1"));
@@ -29,8 +31,11 @@ public class Main {
         taskManager.createSubTask(new SubTask("SubTask3", Status.DONE, "SubTaskDesk3", epic3.getId()));
         taskManager.createSubTask(new SubTask("SubTask3", Status.DONE, "SubTaskDesk3", epic3.getId()));
 
+        TaskManager compareTaskManager = Managers.getDefault();
+        System.out.println("taskManager");
         printAllTasks(taskManager);
-
+        System.out.println("compareTaskManager");
+        printAllTasks(compareTaskManager);
     }
 
     private static void printAllTasks(TaskManager manager) {
